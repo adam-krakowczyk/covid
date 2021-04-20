@@ -1,5 +1,5 @@
 from os.path import isfile
-import openpyxl
+from openpyxl import Workbook, load_workbook
 from pathlib import Path
 
 
@@ -7,9 +7,15 @@ SOURCE_EXCEL_1 = 'test_kwarantanna1.xlsx'
 SOURCE_EXCEL_2 = 'test_wynikidodatnie1.xlsx'
 DESTINATION_EXCEL ='test_wynik_pasuje.xlsx'
 
-print ('start processing')
 
 def xls_compare(file1,file2):
+        '''
+        funkcja porównuje adresy z zpliku file1 z plikiem file2, czyści pole adres z smieci
+        :param file1:
+        :param file2:
+        :return: none
+        '''
+
         print ('[checking files exist]')
         if not isfile(file1):
             print('[-] File doesnt exist: ', file1)
@@ -20,7 +26,7 @@ def xls_compare(file1,file2):
         print('[+] Files exist')
 
         xlsx_file = Path('', file1)
-        wb_obj = openpyxl.load_workbook(xlsx_file)
+        wb_obj = load_workbook(xlsx_file)
 
         # Read the active sheet:
         sheet = wb_obj.active
@@ -38,7 +44,7 @@ def xls_compare(file1,file2):
         print('-'*20)
 
         xlsx_file2 = Path('', file2)
-        wb_obj2 = openpyxl.load_workbook(xlsx_file2)
+        wb_obj2 = load_workbook(xlsx_file2)
 
         # Read the active sheet:
         sheet2 = wb_obj2.active
@@ -69,6 +75,18 @@ def xls_compare(file1,file2):
                 adres_to_call.append(adres)
         print('Spójne adresy: ', len(adres_to_call))
         print(adres_to_call)
+
+        #zapis do xlsx
+        wb = Workbook()
+
+        ws1 = wb.active
+        ws1.title = 'Pasujące adresy'
+        ws1['A1']='Adres'
+        i=1
+        for row in adres_to_call:
+            i+=1
+            ws1.cell(column=1,row=i,value=str(row).capitalize())
+        wb.save(filename=DESTINATION_EXCEL)
 
 
 xls_compare(SOURCE_EXCEL_1,SOURCE_EXCEL_2)
