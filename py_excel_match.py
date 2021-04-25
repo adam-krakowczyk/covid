@@ -1,11 +1,38 @@
 from os.path import isfile
 from openpyxl import Workbook, load_workbook
 from pathlib import Path
-
+from os import walk
 
 SOURCE_EXCEL_1 = 'test_kwarantanna1.xlsx'
 SOURCE_EXCEL_2 = 'test_wynikidodatnie1.xlsx'
 DESTINATION_EXCEL ='test_wynik_pasuje.xlsx'
+
+
+def sum_excels_from_catalog(catalog):
+    data =[]
+    try:
+        _, _, filenames = next(walk(catalog))
+        print(filenames)
+        for file in filenames:
+            xlsx_file = Path('sprawdzeni', file)
+            wb_source = load_workbook(xlsx_file)
+            sheet_source = wb_source.active
+            sheet_source.
+            for row_id in range(1, sheet_source.max_row+1):
+                for col_id in range(1, sheet_source.max_column+1):
+                    cell_obj = sheet_source.cell(row=row_id, column=col_id)
+                    data.append(cell_obj)
+
+            wb_destination = Workbook()
+            sheet_destination = wb_destination.active
+            sheet_destination.title = 'scalony excel'
+            for row in data:
+                sheet_destination.append(row)
+            wb_destination.save(filename='zeszyt3.xlsx')
+
+    except:
+        print('brak plików w katalogu')
+
 
 
 def xls_compare(file1,file2):
@@ -89,4 +116,5 @@ def xls_compare(file1,file2):
         wb.save(filename=DESTINATION_EXCEL)
 
 
-xls_compare(SOURCE_EXCEL_1,SOURCE_EXCEL_2)
+#xls_compare(SOURCE_EXCEL_1,SOURCE_EXCEL_2)
+sum_excels_from_catalog('sprawdzeni')
