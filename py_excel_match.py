@@ -9,7 +9,8 @@ DESTINATION_EXCEL ='test_wynik_pasuje.xlsx'
 
 
 def sum_excels_from_catalog(catalog):
-    data =[]
+    data ={}
+    global_row_id = 1
     try:
         _, _, filenames = next(walk(catalog))
         print(filenames)
@@ -17,18 +18,22 @@ def sum_excels_from_catalog(catalog):
             xlsx_file = Path('sprawdzeni', file)
             wb_source = load_workbook(xlsx_file)
             sheet_source = wb_source.active
-            sheet_source.
-            for row_id in range(1, sheet_source.max_row+1):
+            for row_id in range(2, sheet_source.max_row+1):
+                data_row=[]
                 for col_id in range(1, sheet_source.max_column+1):
                     cell_obj = sheet_source.cell(row=row_id, column=col_id)
-                    data.append(cell_obj)
+                    data_row.append(cell_obj.value)
+                data[global_row_id]=data_row
+                global_row_id+=1
 
-            wb_destination = Workbook()
-            sheet_destination = wb_destination.active
-            sheet_destination.title = 'scalony excel'
-            for row in data:
-                sheet_destination.append(row)
-            wb_destination.save(filename='zeszyt3.xlsx')
+        #print(data)
+        wb_destination = Workbook()
+        sheet_destination = wb_destination.active
+        sheet_destination.title = 'scalony excel'
+        for key,value in data.items():
+            sheet_destination.append(value)
+            print(value)
+        wb_destination.save(filename='zeszyt_all.xlsx')
 
     except:
         print('brak plików w katalogu')
