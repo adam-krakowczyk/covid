@@ -32,7 +32,7 @@ def sum_excels_from_catalog(catalog):
         sheet_destination.title = 'scalony excel'
         for key,value in data.items():
             sheet_destination.append(value)
-            print(value)
+            #print(value)
         wb_destination.save(filename='zeszyt_all.xlsx')
 
     except:
