@@ -3,6 +3,8 @@ from openpyxl import Workbook, load_workbook
 from pathlib import Path
 from os import walk
 
+
+
 SOURCE_EXCEL_1 = 'test_kwarantanna1.xlsx'
 SOURCE_EXCEL_2 = 'test_wynikidodatnie1.xlsx'
 DESTINATION_EXCEL ='test_wynik_pasuje.xlsx'
@@ -16,7 +18,14 @@ def sum_excels_from_catalog(catalog):
         print(filenames)
         for file in filenames:
             xlsx_file = Path('sprawdzeni', file)
+            wb_source.security.workbookPassword = 'test'
             wb_source = load_workbook(xlsx_file)
+
+            #print (wb_source.sheetnames)
+            for s in range(len(wb_source.sheetnames)):
+                if wb_source.sheetnames[s] == 'Nowe Nazwiska':
+                    break
+            wb_source.active = s
             sheet_source = wb_source.active
             for row_id in range(2, sheet_source.max_row+1):
                 data_row=[]
